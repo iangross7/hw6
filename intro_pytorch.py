@@ -16,10 +16,19 @@ def get_data_loader(training = True):
     RETURNS:
         Dataloader for the training set (if training = True) or the test set (if training = False)
     """
-    transform=transforms.Compose([
+    custom_transform=transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize((0.1307,), (0.3081,))
         ])
+    
+    train_set=datasets.FashionMNIST('./data',train=True, download=True,transform=custom_transform)
+    test_set=datasets.FashionMNIST('./data', train=False, transform=custom_transform)
+
+    if training:
+        return torch.utils.data.DataLoader(train_set, batch_size = 64)
+    else:
+        return torch.utils.data.DataLoader(test_set, batch_size = 64)
+    
 
 
 
@@ -100,4 +109,6 @@ if __name__ == '__main__':
     Feel free to write your own test code here to exaime the correctness of your functions. 
     Note that this part will not be graded.
     '''
-    criterion = nn.CrossEntropyLoss()
+    loader = get_data_loader()
+    print(loader.dataset)
+    # criterion = nn.CrossEntropyLoss()
